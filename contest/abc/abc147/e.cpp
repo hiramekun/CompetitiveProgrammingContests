@@ -58,25 +58,49 @@ void solve() {
     rep(i, h) rep(j, w) cin >> a[i][j];
     rep(i, h) rep(j, w) cin >> b[i][j];
 
-    vvl res(h, vl(w));
-    rep(i, h) rep(j, w) res[i][j] = abs(a[i][j] - b[i][j]);
-    ll i = 0, j = 0;
-    ll now = 0;
-    vl tmp;
-    while (i != h && j != w) {
-        now += res[i][j];
-        tmp.eb(res[i][j]);
-        if (i + 1 > h - 1) j++;
-        else if (j + 1 > w - 1) i++;
-        else {
-            if (res[i + 1][j] < res[i][j + 1]) {
-                i++;
-            } else {
-                j++;
+    // a < b にする
+    rep(i, h) {
+        rep(j, w) {
+            P p = minmax(a[i][j], b[i][j]);
+            a[i][j] = p.first, b[i][j] = p.second;
+        }
+    }
+
+    ll max_diff = 85 * (h + w);
+    bool dp[h][w][max_diff];
+    rep(i, h) rep(j, w) rep(l, max_diff) dp[i][j][l] = false;
+
+    dp[0][0][b[0][0] - a[0][0]] = true;
+
+    rep(i, h) {
+        rep(j, w) {
+            rep(l, max_diff) {
+                if (dp[i][j][l]) {
+                    if (i + 1 <= h - 1) {
+                        vl candi{l + b[i + 1][j] - a[i + 1][j],
+                                 l - b[i + 1][j] + a[i + 1][j],
+                                 -l + b[i + 1][j] - a[i + 1][j],
+                                 -l - b[i + 1][j] + a[i + 1][j]};
+
+                        each(e, candi) if (e >= 0) dp[i + 1][j][e] = true;
+                    }
+                    if (j + 1 <= w - 1) {
+                        vl candi{l + b[i][j + 1] - a[i][j + 1],
+                                 l - b[i][j + 1] + a[i][j + 1],
+                                 -l + b[i][j + 1] - a[i][j + 1],
+                                 -l - b[i][j + 1] + a[i][j + 1]};
+
+                        each(e, candi) if (e >= 0) dp[i][j + 1][e] = true;
+                    }
+                }
             }
         }
     }
-    cout << accumulate(all(tmp), 0LL) / (h * w) << endl;
+    ll ans = ll_inf;
+    rep(i, max_diff) {
+        if (dp[h - 1][w - 1][i]) ans = min(ans, i);
+    }
+    cout << ans << '\n';
 }
 
 int main() {
