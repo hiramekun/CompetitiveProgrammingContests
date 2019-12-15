@@ -61,54 +61,38 @@ void solve() {
     rep(i, n) {
         cin >> a[i];
 
-        rep(j, a[i]) {
+        rep(_, a[i]) {
             ll x, y;
             cin >> x >> y;
             x--;
             xy[i][x] = y;
         }
     }
+
     ll ans = 0;
-    rep(i, pow(2, n)) {
+    rep(bit, pow(2, n)) {
         vl tmp(n, -1); // 1:正直, -1:未定, 0:不親切決定
         bool out = false;
         rep(j, n) { // j番目の人
-            if (1 & i >> j) { // 正直とする
+            if (1 & bit >> j) { // jbit目を正直とする
                 if (tmp[j] == 0) out = true;
+                tmp[j] = 1;
                 rep(l, n) {
                     if (xy[j][l] == -1) continue;
                     if (tmp[l] == -1) tmp[l] = xy[j][l];
-                    else {
-                        if (tmp[l] == xy[j][l]) continue;
-                        else {
-                            out = true;
-                            break;
-                        }
+                    else if (tmp[l] != xy[j][l]) {
+                        out = true;
+                        break;
                     }
                 }
+            } else {
+                if (tmp[j] == 1) out = true;
+                tmp[j] = 0;
             }
         }
         ll res = 0;
-        rep(j, n) {
-            if ((1 & i >> j) == 1 && tmp[j] == 0) break;
-            if ((1 & i >> j) == 1 || tmp[j] == 1) {
-                res++;
-                rep(l, n) {
-                    if (xy[j][l] == -1) continue;
-                    if (tmp[l] == -1) tmp[l] = xy[j][l];
-                    else {
-                        if (tmp[l] == xy[j][l]) continue;
-                        else {
-                            out = true;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-        if (out) continue;
-
-        ans = max(ans, res);
+        rep(j, n) if (tmp[j] == 1) res++;
+        if (!out) ans = max(ans, res);
     }
     cout << ans << '\n';
 }
