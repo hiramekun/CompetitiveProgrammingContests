@@ -1,5 +1,8 @@
 contest/track/
+main
 *.out
 cmake-build-debug/
 CMakeLists.txt
 .swp
+*.txt
+metadata.json
