@@ -54,64 +54,54 @@ ostream &operator<<(ostream &out, const vector<vector<T>> &list) {
 void solve() {
     ll n, a, b, c;
     cin >> n >> a >> b >> c;
-    if (a > 2 * n) a = 2 * n;
-    if (b > 2 * n) b = 2 * n;
-    if (c > 2 * n) c = 2 * n;
-    map<string, ll> mp;
-    vector<string> ss;
-    rep(i, n) {
-        string s;
-        cin >> s;
-        ss.eb(s);
-        mp[s]++;
-    }
-    ll ab_all = 0, ac_all = 0, bc_all = 0;
-    ll ab_a_plus = 0, ac_a_plus = 0, bc_b_plus = 0;
-    rep(i, n) {
-        if (ss[i] == "AB") {
-            ab_all++;
-            if (b == 0) {
-                b++, a--;
-            } else {
-                a++, b--;
-                ab_a_plus++;
-            }
-            if (a < 0) {
-                cout << "No" << '\n';
-                return;
-            }
-        } else if (ss[i] == "AC") {
-            ac_all++;
-            if (c == 0) {
-                c++, a--;
-            } else {
-                a++, c--;
-                ac_a_plus++;
-            }
-            if (a < 0) {
-                cout << "No" << '\n';
-                return;
-            }
-        } else { // "BC"
-            bc_all++;
-            if (c == 0 && b == 0) {
-                if (a > 0 && ab_a_plus > 0) ab_a_plus--, a--, b++;
-                else if (a > 0 && ac_a_plus > 0) ac_a_plus--, a--, c++;
-                else {
-                    cout << "No" << '\n';
-                    return;
-                }
-            }
+    vector<string> s(n);
+    rep(i, n) cin >> s[i];
 
-            if (c == 0) {
-                c++, b--;
-            } else if (b == 0) {
-                b++, c--;
-                bc_b_plus++;
-            } else {
-                b++, c--;
+    vector<string> ans;
+    auto rec = [&](auto &&f, ll idx, ll a_p, ll b_p, ll c_p) -> bool {
+        if (idx == n) return true;
+        string now = s[idx];
+        if (now == "AB") {
+            if (a_p > 0 && f(f, idx + 1, a_p - 1, b_p + 1, c_p)) {
+                ans.eb("B");
+                return true;
             }
+            if (b_p > 0 && f(f, idx + 1, a_p + 1, b_p - 1, c_p)) {
+                ans.eb("A");
+                return true;
+            }
+            if (!ans.empty()) ans.pop_back();
+            return false;
+        } else if (now == "AC") {
+            if (a_p > 0 && f(f, idx + 1, a_p - 1, b_p, c_p + 1)) {
+                ans.eb("C");
+                return true;
+            }
+            if (c_p > 0 && f(f, idx + 1, a_p + 1, b_p, c_p - 1)) {
+                ans.eb("A");
+                return true;
+            }
+            if (!ans.empty()) ans.pop_back();
+            return false;
+        } else { // now == "BC"
+            if (b_p > 0 && f(f, idx + 1, a_p, b_p - 1, c_p + 1)) {
+                ans.eb("C");
+                return true;
+            }
+            if (c_p > 0 && f(f, idx + 1, a_p, b_p + 1, c_p - 1)) {
+                ans.eb("B");
+                return true;
+            }
+            if (!ans.empty()) ans.pop_back();
+            return false;
         }
+    };
+    if (rec(rec, 0, a, b, c)) {
+        cout << "Yes" << '\n';
+        reverse(all(ans));
+        cout << ans << '\n';
+    } else {
+        cout << "No" << '\n';
     }
 }
 
