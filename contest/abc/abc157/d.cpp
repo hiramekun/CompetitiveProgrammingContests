@@ -135,11 +135,62 @@ void solve() {
     cout << ans << '\n';
 }
 
+void solve2() {
+    ll n, m, k;
+    cin >> n >> m >> k;
+    vector<ll> g[n];
+    rep(i, m) {
+        ll a, b;
+        cin >> a >> b;
+        a--, b--;
+        g[a].eb(b);
+        g[b].eb(a);
+    }
+
+    vector<bool> seen(n), seen2(n);
+    ll con_cnt = -1;
+    auto rec = [&seen, &con_cnt, &g](auto &&f, ll now) -> void {
+        con_cnt++;
+        seen[now] = true;
+        each(e, g[now]) {
+            if (seen[e]) continue;
+            f(f, e);
+        }
+    };
+    vl ans(n), group(n);
+    ll group_code = 1;
+    auto rec2 = [&seen2, &group, &g, &group_code, &ans, &con_cnt](auto &&f, ll now) -> void {
+        group[now] = group_code;
+        ans[now] = con_cnt - g[now].size();
+        seen2[now] = true;
+        each(e, g[now]) {
+            if (seen2[e]) continue;
+            f(f, e);
+        }
+    };
+    rep(i, n) {
+        if (seen[i]) continue;
+        con_cnt = -1;
+        rec(rec, i);
+        rec2(rec2, i);
+        group_code++;
+    }
+    rep(i, k) {
+        ll c, d;
+        cin >> c >> d;
+        c--, d--;
+        if (group[c] == group[d]) {
+            ans[c]--, ans[d]--;
+        }
+    }
+    cout << ans << '\n';
+}
+
 int main() {
 #ifdef MY_DEBUG
     while (true) {
 #endif
-        solve();
+        solve2();
 #ifdef MY_DEBUG
     }
 #endif
