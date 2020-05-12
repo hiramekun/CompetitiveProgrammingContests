@@ -64,25 +64,28 @@ void solve() {
     rep(i, h) {
         rep(j, w) {
             if (s[i][j] == '#') continue;
-
             vector<vector<ll>> d(h, vector<ll>(w, ll_inf));
-            queue<P> q;
-            q.push(make_pair(i, j));
             d[i][j] = 0;
-            ll tmp = 0;
-            while (!q.empty()) {
-                ll x = q.front().F, y = q.front().S;
-                q.pop();
-                rep(k, 4) {
-                    ll nx = x + dx[k], ny = y + dy[k];
-                    if (nx < 0 || h - 1 < nx || ny < 0 || w - 1 < ny) continue;
-                    if (d[nx][ny] < ll_inf || s[nx][ny] == '#') continue;
 
-                    d[nx][ny] = d[x][y] + 1;
-                    tmp = max(tmp, d[nx][ny]);
-                    q.push(make_pair(nx, ny));
+            ll tmp = 0;
+            auto rec = [&](auto &&f, vector<P> &nxt) -> void {
+                if (nxt.empty()) return;
+                vector<P> nxt2;
+                each(e, nxt) {
+                    ll x = e.first, y = e.second;
+                    rep(k, 4) {
+                        ll nx = x + dx[k], ny = y + dy[k];
+                        if (nx < 0 || h - 1 < nx || ny < 0 || w - 1 < ny) continue;
+                        if (s[nx][ny] == '#' || d[nx][ny] < ll_inf) continue;
+                        d[nx][ny] = d[x][y] + 1;
+                        tmp = max(tmp, d[nx][ny]);
+                        nxt2.emplace_back(make_pair(nx, ny));
+                    }
                 }
-            }
+                f(f, nxt2);
+            };
+            vector<P> now{make_pair(i, j)};
+            rec(rec, now);
             ans = max(ans, tmp);
         }
     }
