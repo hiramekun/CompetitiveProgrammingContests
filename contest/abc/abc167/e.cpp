@@ -138,35 +138,27 @@ public:
 typedef vector<modint<mod>> vmod;
 typedef vector<vmod> vvmod;
 
-ll powmod(ll x, ll n, ll mod) {
+modint<mod> powmod(modint<mod> x, ll n) {
     if (n == 0) return 1;
     if (n % 2 == 0) {
-        ll t = powmod(x, n / 2, mod);
-        return t * t % mod;
+        modint<mod> t = powmod(x, n / 2);
+        return t * t;
     }
-    return x * powmod(x, n - 1, mod) % mod;
+    return x * powmod(x, n - 1);
 }
 
 void solve() {
     ll n, m, k;
     cin >> n >> m >> k;
-    vvl tonari_cnt(m, vl(k)); // tonari_cnt[i][j]: 最後の数がiで、隣り合うものがj個の場合の数
-    vector<queue<ll>> tonari(m);
-    vvl dp(n + 1, vl(m)); // dp[i][j]: i桁目まで見て、最後の数がjのものの場合の数
-    rep(i, m) dp[0][0] = 1;
-    rep(i, n) {
-        rep(prev, m) {
-            rep(now, m) {
-                if (prev == now) {
-                    tonari[now].push(1);
-                } else {
-                    dp[i + 1][now] += dp[i][prev];
-                }
-            }
-        }
+    COMinit();
+    modint<mod> ans;
+    rep(i, k + 1) {
+        modint<mod> tmp = COM(n - 1, i);
+        tmp *= m;
+        tmp *= powmod(m - 1, n - i - 1);
+        ans += tmp;
     }
-    modint<mod> ans = 0;
-    rep(i, m) ans += dp[n][i];
+    cout << ans.x << '\n';
 }
 
 int main() {
