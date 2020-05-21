@@ -1,6 +1,3 @@
-/**
- * Created by hiramekun at 13:48 on 2020-05-17.
- */
 #include <bits/stdc++.h>
 
 using namespace std;
@@ -56,23 +53,26 @@ void solve() {
     ll k;
     cin >> s >> k;
     ll n = s.size();
-
     ll dp[n + 1][k + 1][2];
-    rep(i, n + 1)rep(j, k + 1)rep(l, 2)dp[i][j][l] = 0;
-    dp[0][0][0] = 1;
+    // dp[in][ik][isn]: 上からin桁まで見て、0でない数字がik個ある。
+    // isn:
+    //     0 -> ちょうどn
+    //     1 -> n以下が確定
+    rep(i, n + 1) rep(j, k + 1) rep(l, 2) dp[i][j][l] = 0;
 
-    rep(i, n) {
-        rep(j, k + 1) {
-            rep(l, 2) {
+    dp[0][0][0] = 1;
+    rep(in, n) {
+        ll now = s[in] - '0';
+        rep(ik, k + 1) {
+            rep(isn, 2) {
                 rep(d, 10) {
-                    ll now = s[i] - '0', nj = j, nl = l;
-                    if (d != 0) nj++;
-                    if (nj > k) continue;
-                    if (nl == 0) {
-                        if (d > now) continue;
-                        if (d < now) nl = 1;
-                    }
-                    dp[i + 1][nj][nl] += dp[i][j][l];
+                    ll ni = in + 1, nk = ik, nisn = isn;
+                    if (d != 0) nk++;
+                    if (nk > k) continue;
+                    if (d < now && isn == 0) nisn = 1;
+                    else if (d > now && isn == 0) continue;
+
+                    dp[ni][nk][nisn] += dp[in][ik][isn];
                 }
             }
         }
