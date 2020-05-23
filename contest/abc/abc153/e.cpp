@@ -1,6 +1,3 @@
-/**
- * Created by hiramekun at 22:15 on 2020-05-20.
- */
 #include <bits/stdc++.h>
 
 using namespace std;
@@ -54,23 +51,21 @@ ostream &operator<<(ostream &out, const vector<vector<T>> &list) {
 void solve() {
     ll h, n;
     cin >> h >> n;
-
     vl a(n), b(n);
-    rep(i, n) {
-        cin >> a[i] >> b[i];
-    }
-    vl dp(2 * 1e4 + 1, ll_inf); // dp[i]: 体力をi減らすため消耗する魔力の最小値
+    rep(i, n) cin >> a[i] >> b[i];
+
+    ll n_dp = 2 * 1e4 + 1;
+    vector<ll> dp(n_dp, ll_inf);
     dp[0] = 0;
-    rep(i, 2 * 1e4 + 1) {
-        rep(j, n) {
-            if (i < a[j]) continue;
-            dp[i] = min(dp[i], dp[i - a[j]] + b[j]);
+    rep(ih, n_dp) {
+        rep(jn, n) {
+            if (a[jn] > ih) continue;
+            dp[ih] = min(dp[ih], dp[ih - a[jn]] + b[jn]);
         }
     }
     ll ans = ll_inf;
-    for (ll r = h; r <= 2 * 1e4; ++r) {
-        ans = min(ans, dp[r]);
-
+    for (ll i = h; i < n_dp; ++i) {
+        ans = min(ans, dp[i]);
     }
     cout << ans << '\n';
 }
