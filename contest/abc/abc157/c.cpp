@@ -1,6 +1,3 @@
-/**
- * Created by hiramekun at 23:41 on 2020-05-19.
- */
 #include <bits/stdc++.h>
 
 using namespace std;
@@ -54,33 +51,28 @@ ostream &operator<<(ostream &out, const vector<vector<T>> &list) {
 void solve() {
     ll n, m;
     cin >> n >> m;
-    vl ans(n, -1);
+    vl s(m), c(m);
     rep(i, m) {
-        ll s, c;
-        cin >> s >> c;
-        s--;
-        if (ans[s] == -1) ans[s] = c;
-        else if (ans[s] != c) {
-            cout << -1 << '\n';
+        cin >> s[i] >> c[i];
+    }
+    for (ll i = 0; i < 1000; ++i) {
+        string num_str = to_string(i);
+        if (num_str.size() != n) {
+            continue;
+        }
+        bool ok = true;
+        rep(j, m) {
+            if (num_str[s[j] - 1] - '0' != c[j]) {
+                ok = false;
+                break;
+            }
+        }
+        if (ok) {
+            cout << num_str << '\n';
             return;
         }
     }
-    if (ans[0] == -1 && n == 1) ans[0] = 0;
-    else {
-        if (n != 1 && ans[0] == 0) {
-            cout << -1 << '\n';
-            return;
-        }
-        if (ans[0] == -1) ans[0] = 1;
-        for (ll i = 1; i < n; ++i) {
-            if (ans[i] == -1) ans[i] = 0;
-        }
-    }
-    string str;
-    rep(i, n) {
-        str += (ans[i] + '0');
-    }
-    cout << str << '\n';
+    cout << -1 << '\n';
 }
 
 int main() {
