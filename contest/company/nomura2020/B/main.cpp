@@ -50,21 +50,8 @@ void solve() {
     ll n = t.size();
     ll ans = 0;
     rep(i, n) {
-        if (t[i] == 'D') {
-            ans++;
-        }
-        if (i >= 1) {
-            if (t[i] == 'D' && t[i - 1] == 'P') {
-                ans++;
-            }
-            if (t[i] == '?' && t[i - 1] == 'P') {
-                ans += 2;
-                t[i] = 'D';
-            } else if (t[i] == '?') {
-                t[i] = 'P';
-            }
-        } else if (t[i] == '?') {
-            t[i] = 'P';
+        if (t[i] == '?') {
+            t[i] = 'D';
         }
     }
     cout << t << '\n';

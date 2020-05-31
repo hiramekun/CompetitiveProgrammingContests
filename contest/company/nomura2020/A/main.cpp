@@ -55,7 +55,7 @@ void solve() {
     }
     else {
         diff += (60 - (m1 - m2));
-        diff += 60 + (h2 - 1 - h1);
+        diff += 60 * (h2 - 1 - h1);
     }
     cout << diff - k << '\n';
 }
