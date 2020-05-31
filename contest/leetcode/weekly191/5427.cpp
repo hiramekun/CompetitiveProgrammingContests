@@ -63,11 +63,10 @@ class Solution {
 public:
     double getProbability(vector<int> &balls) {
         ll n = balls.size();
-        double chil = 0;
         ll k = accumulate(all(balls), 0LL);
         vvl table = comb(k, k / 2);
-        ll moth = table[k][k / 2];
-        vl a(n), b(n);
+
+        double chil = 0;
         auto rec = [&](auto &&f, ll i, vl &A, vl &B, ll multi) -> void {
             if (i == n) {
                 if (accumulate(all(A), 0LL) == accumulate(all(B), 0LL)) {
@@ -89,7 +88,11 @@ public:
                 B[i] = 0;
             }
         };
+
+        vl a(n), b(n);
         rec(rec, 0, a, b, 1);
+
+        ll moth = table[k][k / 2];
         return chil / moth;
     }
 };
