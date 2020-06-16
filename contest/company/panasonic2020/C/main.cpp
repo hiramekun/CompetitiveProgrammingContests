@@ -3,6 +3,7 @@
 using namespace std;
 
 using ll = long long;
+using ld = long double;
 using vl = vector<ll>;
 using vvl = vector<vl>;
 using vb = vector<bool>;
@@ -48,24 +49,18 @@ ostream &operator<<(ostream &out, const vector<vector<T>> &list) {
 /* ------------- ANSWER ------------- */
 /* ---------------------------------- */
 
-const long double eps = 1.0e-6; // 許容される誤差
-
-long double mysqrtl(long double x) {
-    long double a = sqrt((double) x); // 近似値
-    do {
-        a = (a + x / a) / 2.0L;
-    } while (fabsl(x - a * a) > eps);
-    return a;
-}
-
 void solve() {
-    long double a, b, c;
+    ll a, b, c;
     cin >> a >> b >> c;
-    long double d = c - a - b;
-    if (d >= 0 && 4 * a * b < pow(d, 2)) {
-        cout << "Yes" << '\n';
-    } else {
+    ll d = (c - a - b);
+    if (d < 0) {
         cout << "No" << '\n';
+    } else {
+        if (d * d > 4 * a * b) {
+            cout << "Yes" << '\n';
+        } else {
+            cout << "No" << '\n';
+        }
     }
 }
 
