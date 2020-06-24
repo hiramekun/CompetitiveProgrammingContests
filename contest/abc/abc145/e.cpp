@@ -1,11 +1,9 @@
-/**
- * Created by hiramekun at 20:10 on 2019-11-16.
- */
 #include <bits/stdc++.h>
 
 using namespace std;
 
 using ll = long long;
+using ld = long double;
 using vl = vector<ll>;
 using vvl = vector<vl>;
 using vb = vector<bool>;
@@ -19,9 +17,9 @@ const ll inf = ll(1e9);
 const ll e5 = ll(1e5);
 const ll ll_inf = ll(1e9) * ll(1e9);
 
-#define rep(i, n) for(ll i = 0; i < (ll)(n); i++)
-#define repr(i, n) for(ll i = ll(n - 1); i >= 0; i--)
-#define each(i, mp) for(auto& i:mp)
+#define rep(i, n) for (ll i = 0; i < (ll)(n); i++)
+#define repr(i, n) for (ll i = ll(n - 1); i >= 0; i--)
+#define each(i, mp) for (auto &i : mp)
 #define eb emplace_back
 #define F first
 #define S second
@@ -54,31 +52,23 @@ ostream &operator<<(ostream &out, const vector<vector<T>> &list) {
 void solve() {
     ll n, t;
     cin >> n >> t;
+
     vector<P> ab(n);
-    rep(i, n) {
-        cin >> ab[i].F >> ab[i].S;
-    }
-    // 美味しさ大きい順
-    sort(all(ab), [](P a, P b) { return a.S > b.S; });
-    vvl candi(2);
-    rep(i, n) {
-        if (i != 0) candi[0].eb(i);
-        if (i != 1) candi[1].eb(i);
-    }
+    rep(i, n) cin >> ab[i].first >> ab[i].second;
 
+    vector<vector<ll>> dp(n + 1, vector<ll>(t + (*max_element(all(ab))).first + 1));
     ll ans = 0;
-    for (ll i = 0; i < 2; i++) {
-        vvl dp(n + 10, vl(t + 3001));
-        vl c = candi[i];
-        rep(j, n - 1) {
-            rep(k, t + 1) {
-                dp[j + 1][k] = max(dp[j + 1][k], dp[j][k]);
-                dp[j + 1][k + ab[c[j]].F] = max({dp[j + 1][k + ab[c[j]].F], dp[j][k] + ab[c[j]].S});
-            }
+    sort(all(ab));
+    rep(i, n) {
+        rep(j, t) {
+            ll nxt = j + ab[i].first;
+            // 使わない時
+            dp[i + 1][j] = max(dp[i][j], dp[i + 1][j]);
+            // 使う時
+            dp[i + 1][nxt] = max(dp[i + 1][nxt], dp[i][j] + ab[i].second);
+            ans = max(ans, dp[i + 1][nxt]);
         }
-        rep(j, n) ans = max(dp[j][t - 1] + ab[i].S, ans);
     }
-
     cout << ans << '\n';
 }
 
