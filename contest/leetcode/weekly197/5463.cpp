@@ -48,7 +48,6 @@ template <class T> ostream &operator<<(ostream &out, const vector<vector<T>> &li
 /* ---------------------------------- */
 class Solution {
 public:
-    double dis(P a, P b) { return sqrt(pow(a.F - b.F, 2) + pow(a.S - b.S, 2)); }
     double dis(P a, vector<vector<int>> &pos) {
         double ret = 0;
         each(e, pos) { ret += sqrt(pow(a.F - e[0], 2) + pow(a.S - e[1], 2)); }
@@ -60,10 +59,9 @@ public:
         double d = dis(xy, positions);
         double step = 100.0;
 
-        int done = 0;
-
+        bool done;
         while (step > 0.000001) {
-            done = 0;
+            done = false;
             for (int i = 0; i < 4; ++i) {
                 double nx = (double)xy.first + step * dx[i];
                 double ny = (double)xy.second + step * dy[i];
@@ -73,7 +71,7 @@ public:
                 if (t < d) {
                     d = t;
                     xy = P(nx, ny);
-                    done = 1;
+                    done = true;
                     break;
                 }
             }
