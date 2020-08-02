@@ -50,21 +50,25 @@ template <class T> ostream &operator<<(ostream &out, const vector<vector<T>> &li
 class Solution {
 public:
     int maxSum(vector<int> &nums1, vector<int> &nums2) {
+        nums1.emplace_back(1e9), nums2.emplace_back(1e9);
         ll n1 = nums1.size(), n2 = nums2.size();
-        vl d1(n1 + 1), d2(n2 + 1, -1);
-        ll d2prev = 0;
-        rep(i, n1) {
-            d1[i + 1] = d1[i] + nums1[i];
-            auto itr = lower_bound(all(nums2), nums1[i]);
-            // あった
-            if (itr != nums2.end() && *itr == nums1[i]) {
-                ll d2idx = itr - nums2.begin() + 1;
-                for (ll j = d2prev; j < d2idx; ++j) {
-                    d2[j + 1] += d2[j] + nums2[j];
-                }
-
-                d1[i + 1] = max(d1[i + 1], d2[d2idx]);
+        ll i1 = 0, i2 = 0;
+        ll ans = 0;
+        ll now1 = 0, now2 = 0;
+        while (i1 < n1 || i2 < n2) {
+            if (nums1[i1] < nums2[i2]) {
+                now1 += nums1[i1++];
+            } else if (nums2[i2] < nums1[i1]) {
+                now2 += nums2[i2++];
+            } else {
+                ans += max(now1, now2) + nums1[i1];
+                now1 = now2 = 0;
+                i1++, i2++;
             }
         }
+        ans -= 1e9;
+        ans %= mod;
+        if (ans < 0) ans += mod;
+        return ans;
     }
 };
