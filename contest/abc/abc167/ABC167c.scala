@@ -8,12 +8,12 @@ object Main extends App {
   val sc = new Scanner(System.in)
 
   val n, m, x = sc.nextInt()
-  val aArr = new Array[Array[Int]](n)
-  val cArr = new Array[Int](n)
+  val aArr = Array.ofDim[Array[Int]](n)
+  val cArr = Array.ofDim[Int](n)
 
   (0 until n).foreach { i =>
     cArr(i) = sc.nextInt()
-    aArr(i) = (0 until m).map(_ => sc.nextInt()).toArray
+    aArr(i) = Array.fill(m)(sc.nextInt())
   }
   val default = 1e9.toInt
 
@@ -32,7 +32,7 @@ object Main extends App {
     }
   }
 
-  val result = dfs(-1, 0, willBuy = false, new Array[Int](m))
+  val result = dfs(-1, 0, willBuy = false, Array.ofDim[Int](m))
   val ans = if (result == default) -1 else result
   pw.println(ans)
   pw.flush()
