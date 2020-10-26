@@ -17,6 +17,7 @@ object Main extends App {
   }
   val default = 1e9.toInt
 
+  // 各インデックスの参考書を、買う買わないで全探索。O(2^n)
   def dfs(idx: Int, sum: Int, willBuy: Boolean, skills: Array[Int]): Int = {
     if (idx > n - 1) {
       if (!skills.exists(_ < x)) sum
