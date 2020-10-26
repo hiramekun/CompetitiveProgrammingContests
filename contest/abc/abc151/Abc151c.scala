@@ -3,8 +3,8 @@ object Main extends App {
   val sc = new java.util.Scanner(System.in)
 
   val n, m = sc.nextInt
-  val aced = new Array[Boolean](n + 1)
-  val penalty = new Array[Int](n + 1)
+  val aced = Array.ofDim[Boolean](n + 1)
+  val penalty = Array.ofDim[Int](n + 1)
 
   (1 to m).foreach { _ =>
     val p = sc.nextInt
